@@ -52,17 +52,52 @@ def run_nuxmv_1_cop():
     print("Standard Error:\n", result.stderr)
     return result.stdout
 
+# def run_nuxmv_2_cops(): #BDD
+#     filename = 'cop_robber_2_cops.smv'
+#     nuxmv_executable_path = os.path.join(NUXMV_PATH, 'nuXmv.exe')
+#     file_path = os.path.join(NUXMV_PATH, filename)
+    
+#     command = [nuxmv_executable_path, "-int", file_path]
+    
+#     nuxmvProcess = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
+#     nuxmvProcess.stdin.write("go\n")
+#     nuxmvProcess.stdin.write("check_ltlspec\n")
+#     nuxmvProcess.stdin.write("quit\n")
+    
+#     stdout, stderr = nuxmvProcess.communicate()
+    
+#     print("Standard Output:\n", stdout)
+#     #print("Standard Error:\n", stderr)
+#     return stdout
 
-def run_nuxmv_2_cops():
+def run_nuxmv_2_cops(): #SAT
     filename = 'cop_robber_2_cops.smv'
     nuxmv_executable_path = os.path.join(NUXMV_PATH, 'nuXmv.exe')
     file_path = os.path.join(NUXMV_PATH, filename)
-    command = [nuxmv_executable_path, file_path]
+    
+    command = [nuxmv_executable_path, "-int", file_path]
+    
+    nuxmvProcess = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
+    nuxmvProcess.stdin.write("go_bmc\n")
+    nuxmvProcess.stdin.write(f"check_ltlspec_bmc -k 150\n")
+    nuxmvProcess.stdin.write("quit\n")
+    
+    stdout, stderr = nuxmvProcess.communicate()
+    
+    print("Standard Output:\n", stdout)
+    # print("Standard Error:\n", stderr)
+    return stdout
 
-    result = subprocess.run(command, capture_output=True, text=True)
-    print("Standard Output:\n", result.stdout)
-    print("Standard Error:\n", result.stderr)
-    return result.stdout
+# def run_nuxmv_2_cops(): #Normal
+#     filename = 'cop_robber_2_cops.smv'
+#     nuxmv_executable_path = os.path.join(NUXMV_PATH, 'nuXmv.exe')
+#     file_path = os.path.join(NUXMV_PATH, filename)
+#     command = [nuxmv_executable_path, file_path]
+
+#     result = subprocess.run(command, capture_output=True, text=True)
+#     print("Standard Output:\n", result.stdout)
+#     print("Standard Error:\n", result.stderr)
+#     return result.stdout
 
 def get_positions_1_cop(board):
     cop_position = None
@@ -193,8 +228,10 @@ if __name__ == "__main__":
     board_2_cops = [
     ['#', '#', '#', '#', '#', '#'],
     ['#', 'C1', 'C2', '_', 'R', '#'],
-    ['#', '_', 'X', 'X', '_', '#'],
-    ['#', '_', 'X', 'X', '_', '#'],
+    ['#', '_', '#', '#', '_', '#'],
+    ['#', '_', '#', '#', '_', '#'],
+    ['#', '_', '_', '_', '_', '#'],
+    ['#', '_', '_', '_', '_', '#'],
     ['#', '_', '_', '_', '_', '#'],
     ['#', '#', '#', '#', '#', '#']
 ]
