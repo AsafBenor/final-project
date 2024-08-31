@@ -35,8 +35,8 @@ board = [
 ]
 
 # Initial positions
-cop1 = [1, 1]
-cop2 = [1, 2]
+cop1 = [1, 2]
+cop2 = [1, 1]
 robber = [1, 4]
 
 def draw_board():
@@ -85,19 +85,68 @@ def is_near_circle_wall(pos):
     return False
 
 def move_cop_circle(cop, clockwise):
-    directions = ['u', 'r', 'd', 'l']
-    if not clockwise:
-        directions = directions[::-1]
+    y, x = cop[0], cop[1]
     
-    for direction in directions:
-        if direction == 'u' and is_valid_move([cop[0] - 1, cop[1]]):
-            return [cop[0] - 1, cop[1]]
-        elif direction == 'r' and is_valid_move([cop[0], cop[1] + 1]):
-            return [cop[0], cop[1] + 1]
-        elif direction == 'd' and is_valid_move([cop[0] + 1, cop[1]]):
-            return [cop[0] + 1, cop[1]]
-        elif direction == 'l' and is_valid_move([cop[0], cop[1] - 1]):
-            return [cop[0], cop[1] - 1]
+    if is_valid_move(cop):
+
+        # Above the circle
+        if board[y + 1][x] == 'X':  
+            if clockwise:
+                return [y, x + 1]  # Move right
+            else:
+                return [y, x - 1]  # Move left
+        
+        # Below the circle
+        elif board[y - 1][x] == 'X':  
+            if clockwise:
+                return [y, x - 1]  # Move left
+            else:
+                return [y, x + 1]  # Move right
+        
+        # Left of the circle
+        elif board[y][x + 1] == 'X':  
+            if clockwise:
+                return [y - 1, x]  # Move up
+            else:
+                return [y + 1, x]  # Move down
+        
+        # Right of the circle
+        elif board[y][x - 1] == 'X':  
+            if clockwise:
+                return [y + 1, x]  # Move down
+            else:
+                return [y - 1, x]  # Move up
+        
+        # Corners
+        # Upper-left corner of the circle
+        elif board[y + 1][x + 1] == 'X':  
+            if clockwise:
+                return [y, x + 1]  # Move right
+            else:
+                return [y + 1, x]  # Move down
+        
+        # Upper-right corner of the circle
+        elif board[y + 1][x - 1] == 'X':  
+            if clockwise:
+                return [y + 1, x]  # Move down
+            else:
+                return [y, x - 1]  # Move left
+        
+        # Lower-left corner of the circle
+        elif board[y - 1][x + 1] == 'X':  
+            if clockwise:
+                return [y - 1, x]  # Move up
+            else:
+                return [y, x + 1]  # Move right
+        
+        # Lower-right corner of the circle
+        elif board[y - 1][x - 1] == 'X':  
+            if clockwise:
+                return [y, x - 1]  # Move left
+            else:
+                return [y - 1, x]  # Move up
+    
+    # If none of these cases match, return the original position
     return cop
 
 def move_cop(cop, is_cop1):
