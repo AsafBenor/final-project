@@ -6,7 +6,7 @@ from modelGeneration2 import generate_nusmv_model_1_cop
 from modelGeneration_2_cops import generate_nusmv_model_2_cop
 from output_simulator import visualize_cop_robber_game
 
-NUXMV_PATH = r"C:\Users\asafb\OneDrive - Bar-Ilan University - Students\שולחן העבודה\FinalProject\nuXmv-2.0.0-win64\bin"
+NUXMV_PATH = r"C:\Users\97252\Desktop\final-Project\nuXmv-2.0.0-win64\bin"
 
 
 def print_board(board):
@@ -291,8 +291,8 @@ def parse_nuxmv_output_2_cop(output):
 if __name__ == "__main__":
     board = [
         ['#', '#', '#', '#', '#'],
-        ['#', '_', '_', '_', '#'],
-        ['#', 'R', '#', 'C', '#'],
+        ['#', 'R', '_', '_', '#'],
+        ['#', '_', 'C', '_', '#'],
         ['#', '_', '_', '_', '#'],
         ['#', '#', '#', '#', '#']
     ]
@@ -316,9 +316,9 @@ if __name__ == "__main__":
 
     board_2_cops = [
     ['#', '#', '#', '#', '#', '#'],
-    ['#', 'C1', 'C2', '_', 'R', '#'],
-    ['#', '_', '#', '#', '_', '#'],
-    ['#', '_', '#', '#', '_', '#'],
+    ['#', 'C1', 'C2', '_', '_', '#'],
+    ['#', '_', 'X', 'X', 'R', '#'],
+    ['#', '_', 'X', 'X', '_', '#'],
     ['#', '_', '_', '_', '_', '#'],
     ['#', '_', '_', '_', '_', '#'],
     ['#', '_', '_', '_', '_', '#'],
