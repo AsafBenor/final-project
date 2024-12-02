@@ -61,3 +61,58 @@ Example: To use SAT engine, uncomment lines 74-91 and comment lines 56-72 and 92
 Two different board variables can be configured:
 - For single cop scenario: Modify `board` variable on line 292
 - For two cops scenario: Modify `board_2_cops` variable on line 317
+- ### Board Configuration Rules
+For all cases, board symbols:
+- Empty cell: `_`
+- Wall: `#`
+
+#### 1. NuXMV Model Checking (nuxmv_run.py)
+Single Cop Board (line 292):
+- Cop: `C`
+- Robber: `R`
+
+Two Cops Board (line 317):
+- First Cop: `C1`
+- Second Cop: `C2`
+- Robber: `R`
+- Special Circle Wall: `X`
+
+#### 2. Interactive Simulator (simulator.py)
+Configure board variable on line 26:
+- Uses same symbols as NuXMV boards
+- Control robber with WASD keys
+- Cops follow verified strategies
+
+#### 3. Graph Algorithm (checker.py)
+Configure board variable on line 182:
+- Only wall positions needed
+- Use `#` for walls
+
+Example of valid board configurations:
+```python
+# Single cop board example (nuxmv_run.py)
+board = [
+   ['#', '#', '#', '#', '#'],
+   ['#', 'R', '_', '_', '#'],
+   ['#', '_', 'C', '_', '#'],
+   ['#', '_', '_', '_', '#'],
+   ['#', '#', '#', '#', '#']
+]
+
+# Two cops board example (nuxmv_run.py)
+board_2_cops = [
+   ['#', '#', '#', '#', '#'],
+   ['#', 'C1', 'C2', '_', '#'],
+   ['#', '_', 'X', 'X', '#'],
+   ['#', '_', 'X', 'X', '#'],
+   ['#', '_', '_', 'R', '#'],
+   ['#', '#', '#', '#', '#']
+]
+
+# Checker board example (checker.py)
+board = [
+   '#####',
+   '#___#',
+   '#___#',
+   '#####'
+]
