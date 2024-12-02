@@ -116,3 +116,29 @@ board = [
    '#___#',
    '#####'
 ]
+
+## Running and Results
+
+### Part 1: NuXMV Model Checking
+After completing the necessary configurations, we can proceed to run the model checking component. The cops in this model follow a strategy of reducing their Manhattan distance from the robber. However, when both cops and the robber are near a circle wall (circle case), the cops employ a special strategy - one cop moves clockwise while the other moves counterclockwise around the circle. This strategy increases their chances of catching the robber and prevents an endless chase scenario where the robber could continuously circle around in the same direction.
+
+To run this part, execute the `nuxmv_run.py` file. You'll be prompted to choose between the 1-cop or 2-cops version. Make sure you've defined the correct board configuration beforehand. The script will generate an SMV file in the `nuXmv-2.0.0-win64\bin` directory.
+
+There are three possible outcomes from the model checking:
+1. If the cops can catch the robber at some point, the specification returns as true and the process ends.
+2. When using the SAT engine, if no counter-example is found within your chosen bound limit, it will indicate this result.
+3. If the robber has a winning strategy (creating an endless chase), the system displays a GUI simulation of the chase while simultaneously showing the SMV output in the terminal, including the directional movements of each actor.
+
+### Part 2: Interactive Simulator
+The Interactive Simulator allows you to manually play as the robber and test the cops' behavior under the established rules. Run `simulator.py` to start the game. You control the robber using the keyboard:
+- 'a' key: move left
+- 's' key: move down
+- 'd' key: move right
+- 'w' key: move up
+
+This simulator provides a hands-on way to understand and verify the cops' behavior under the rules set in the model checking component. You can also examine the circle case by defining circle walls as specified in the configuration section.
+
+### Part 3: Graph Algorithm
+The Graph Algorithm component offers a different analytical approach. After configuring the board, the system generates or updates a `graph_data.pkl` file - a pickle file containing all possible state positions for both cop and robber on your defined board. The system reports the total number of winning states (positions where the cop catches the robber).
+
+When you run the program, it asks if you want to play an interactive game. If you choose to play, you'll need to input the initial positions for both the robber and the cop. The game board appears, and you can control the robber using A, S, D, W keys. In this version, the cop employs a different strategy from the NuXMV model checking - it attempts to reach the nearest winning state using the shortest path available in the graph. When the cop successfully captures the robber, the game ends with a "robber caught" message.
