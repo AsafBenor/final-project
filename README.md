@@ -61,7 +61,7 @@ Example: To use SAT engine, uncomment lines 74-91 and comment lines 56-72 and 92
 Two different board variables can be configured:
 - For single cop scenario: Modify `board` variable on line 292
 - For two cops scenario: Modify `board_2_cops` variable on line 317
-- ### Board Configuration Rules
+- #### Board Configuration Rules
 For all cases, board symbols:
 - Empty cell: `_`
 - Wall: `#`
