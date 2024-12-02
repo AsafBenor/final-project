@@ -4,9 +4,9 @@ import re
 
 from modelGeneration2 import generate_nusmv_model_1_cop
 from modelGeneration_2_cops import generate_nusmv_model_2_cop
-from modelGeneration_circle import generate_nusmv_model_2_cop_circle
+from output_simulator import visualize_cop_robber_game
 
-NUXMV_PATH = r"C:\Users\ykupfer\Personal\nuXmv-2.0.0-win64\bin"
+NUXMV_PATH = r"C:\Users\97252\Desktop\final-Project\nuXmv-2.0.0-win64\bin"
 
 
 def print_board(board):
@@ -42,19 +42,6 @@ def create_smv_file_2_cops(board, cop1_position, cop2_position, robber_position)
 
     print(f'File {filename} has been created.')
 
-def create_smv_file_2_cops_circle(board, cop1_position, cop2_position, robber_position):
-    filename = 'cop_robber_2_cops_circle.smv'
-    n = len(board)
-    m = len(board[0])
-
-    content = generate_nusmv_model_2_cop_circle(n, m, board, cop1_position, cop2_position, robber_position)
-    file_path = os.path.join(NUXMV_PATH, filename)
-
-    with open(file_path, 'w') as file:
-        file.write(content)
-
-    print(f'File {filename} has been created.')
-
 def run_nuxmv_1_cop():
     filename = 'cop_robber_1_cop.smv'
     nuxmv_executable_path = os.path.join(NUXMV_PATH, 'nuXmv.exe')
@@ -66,52 +53,52 @@ def run_nuxmv_1_cop():
     print("Standard Error:\n", result.stderr)
     return result.stdout
 
+# def run_nuxmv_2_cops(): #BDD
+#     filename = 'cop_robber_2_cops.smv'
+#     nuxmv_executable_path = os.path.join(NUXMV_PATH, 'nuXmv.exe')
+#     file_path = os.path.join(NUXMV_PATH, filename)
+    
+#     command = [nuxmv_executable_path, "-int", file_path]
+    
+#     nuxmvProcess = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
+#     nuxmvProcess.stdin.write("go\n")
+#     nuxmvProcess.stdin.write("check_ltlspec\n")
+#     nuxmvProcess.stdin.write("quit\n")
+    
+#     stdout, stderr = nuxmvProcess.communicate()
+    
+#     print("Standard Output:\n", stdout)
+#     #print("Standard Error:\n", stderr)
+#     return stdout
 
-def run_nuxmv_2_cops():
-    # filename = 'cop_robber_2_cops.smv'
-    # nuxmv_executable_path = os.path.join(NUXMV_PATH, 'nuXmv.exe')
-    # file_path = os.path.join(NUXMV_PATH, filename)
-    # command = [nuxmv_executable_path, file_path]
-    #
-    # result = subprocess.run(command, capture_output=True, text=True)
-    # print("Standard Output:\n", result.stdout)
-    # print("Standard Error:\n", result.stderr)
-    # return result.stdout
-
+def run_nuxmv_2_cops(): #SAT
     filename = 'cop_robber_2_cops.smv'
     nuxmv_executable_path = os.path.join(NUXMV_PATH, 'nuXmv.exe')
     file_path = os.path.join(NUXMV_PATH, filename)
-
+    
     command = [nuxmv_executable_path, "-int", file_path]
-
-    nuxmvProcess = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True,
-                                    stderr=subprocess.PIPE)
+    
+    nuxmvProcess = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
     nuxmvProcess.stdin.write("go_bmc\n")
     nuxmvProcess.stdin.write(f"check_ltlspec_bmc -k 150\n")
     nuxmvProcess.stdin.write("quit\n")
-
+    
     stdout, stderr = nuxmvProcess.communicate()
-
+    
     print("Standard Output:\n", stdout)
-    return  stdout
-
-def run_nuxmv_2_cops_circle():
-    filename = 'cop_robber_2_cops_circle.smv'
-    nuxmv_executable_path = os.path.join(NUXMV_PATH, 'nuXmv.exe')
-    file_path = os.path.join(NUXMV_PATH, filename)
-
-    command = [nuxmv_executable_path, "-int", file_path]
-
-    nuxmvProcess = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True,
-                                    stderr=subprocess.PIPE)
-    nuxmvProcess.stdin.write("go_bmc\n")
-    nuxmvProcess.stdin.write(f"check_ltlspec_bmc -k 150\n")
-    nuxmvProcess.stdin.write("quit\n")
-
-    stdout, stderr = nuxmvProcess.communicate()
-
-    print("Standard Output:\n", stdout)
+    # print("Standard Error:\n", stderr)
     return stdout
+
+# def run_nuxmv_2_cops(): #Normal
+#     filename = 'cop_robber_2_cops.smv'
+#     nuxmv_executable_path = os.path.join(NUXMV_PATH, 'nuXmv.exe')
+#     file_path = os.path.join(NUXMV_PATH, filename)
+#     command = [nuxmv_executable_path, file_path]
+
+#     result = subprocess.run(command, capture_output=True, text=True)
+#     print("Standard Output:\n", result.stdout)
+#     print("Standard Error:\n", result.stderr)
+#     return result.stdout
 
 def get_positions_1_cop(board):
     cop_position = None
@@ -208,25 +195,104 @@ def parse_nuxmv_output_1_cop(output):
 
     return explanation
 
-# TODO:
+
 def parse_nuxmv_output_2_cop(output):
-    pass
+    def safe_int(value):
+        try:
+            return int(value)
+        except ValueError:
+            return None
+    
+    lines = output.strip().split('\n')
+    positions = {
+        "cop1_row": None,
+        "cop1_col": None,
+        "cop2_row": None,
+        "cop2_col": None,
+        "robber_row": None,
+        "robber_col": None,
+        "movement_cop1": None,
+        "movement_cop2": None,
+        "movement_robber": None
+    }
+    
+    explanation = []
+    
+    for line in lines:
+        if 'cop1_row =' in line:
+            value = line.split('=')[1].strip()
+            positions['cop1_row'] = safe_int(value)
+        elif 'cop1_col =' in line:
+            value = line.split('=')[1].strip()
+            positions['cop1_col'] = safe_int(value)
+        elif 'cop2_row =' in line:
+            value = line.split('=')[1].strip()
+            positions['cop2_row'] = safe_int(value)
+        elif 'cop2_col =' in line:
+            value = line.split('=')[1].strip()
+            positions['cop2_col'] = safe_int(value)
+        elif 'robber_row =' in line:
+            value = line.split('=')[1].strip()
+            positions['robber_row'] = safe_int(value)
+        elif 'robber_col =' in line:
+            value = line.split('=')[1].strip()
+            positions['robber_col'] = safe_int(value)
+        elif 'movement_cop1 =' in line:
+            positions['movement_cop1'] = line.split('=')[1].strip()
+        elif 'movement_cop2 =' in line:
+            positions['movement_cop2'] = line.split('=')[1].strip()
+        elif 'movement_robber =' in line:
+            positions['movement_robber'] = line.split('=')[1].strip()
+        
+        if '-> State:' in line and None not in (
+            positions['cop1_row'], positions['cop1_col'], 
+            positions['cop2_row'], positions['cop2_col'], 
+            positions['robber_row'], positions['robber_col']):
+            cop1_position = (positions['cop1_row'], positions['cop1_col'])
+            cop2_position = (positions['cop2_row'], positions['cop2_col'])
+            robber_position = (positions['robber_row'], positions['robber_col'])
+            
+            if positions['movement_cop1'] != '0' and positions['movement_cop1']:
+                move = positions['movement_cop1']
+                if move == 'd':
+                    explanation.append(f"Cop1 moves down to {cop1_position}")
+                elif move == 'u':
+                    explanation.append(f"Cop1 moves up to {cop1_position}")
+                elif move == 'l':
+                    explanation.append(f"Cop1 moves left to {cop1_position}")
+                elif move == 'r':
+                    explanation.append(f"Cop1 moves right to {cop1_position}")
+            
+            if positions['movement_cop2'] != '0' and positions['movement_cop2']:
+                move = positions['movement_cop2']
+                if move == 'd':
+                    explanation.append(f"Cop2 moves down to {cop2_position}")
+                elif move == 'u':
+                    explanation.append(f"Cop2 moves up to {cop2_position}")
+                elif move == 'l':
+                    explanation.append(f"Cop2 moves left to {cop2_position}")
+                elif move == 'r':
+                    explanation.append(f"Cop2 moves right to {cop2_position}")
+            
+            if positions['movement_robber'] != '0' and positions['movement_robber']:
+                move = positions['movement_robber']
+                if move == 'd':
+                    explanation.append(f"Robber moves down to {robber_position}")
+                elif move == 'u':
+                    explanation.append(f"Robber moves up to {robber_position}")
+                elif move == 'l':
+                    explanation.append(f"Robber moves left to {robber_position}")
+                elif move == 'r':
+                    explanation.append(f"Robber moves right to {robber_position}")
+    
+    return explanation
 
-def check_if_robber_escapes(output):
-    if output is None:
-        print("No output received from nuXmv. The subprocess might have failed.")
-        return False
-
-    # Check if the output contains the line where the cops fail to catch the robber
-    if "-- specification  F ((tmp_cop1_row = robber_row & tmp_cop1_col = robber_col) | (tmp_cop2_row = robber_row & tmp_cop2_col = robber_col))    is false" in output:
-        return True
-    return False
 
 if __name__ == "__main__":
     board = [
         ['#', '#', '#', '#', '#'],
-        ['#', '_', '_', '_', '#'],
-        ['#', 'R', '#', 'C', '#'],
+        ['#', 'R', '_', '_', '#'],
+        ['#', '_', 'C', '_', '#'],
         ['#', '_', '_', '_', '#'],
         ['#', '#', '#', '#', '#']
     ]
@@ -250,9 +316,11 @@ if __name__ == "__main__":
 
     board_2_cops = [
     ['#', '#', '#', '#', '#', '#'],
-    ['#', 'C1', 'C2', '_', 'R', '#'],
+    ['#', 'C1', 'C2', '_', '_', '#'],
+    ['#', '_', 'X', 'X', 'R', '#'],
     ['#', '_', 'X', 'X', '_', '#'],
-    ['#', '_', 'X', 'X', '_', '#'],
+    ['#', '_', '_', '_', '_', '#'],
+    ['#', '_', '_', '_', '_', '#'],
     ['#', '_', '_', '_', '_', '#'],
     ['#', '#', '#', '#', '#', '#']
 ]
@@ -269,27 +337,26 @@ if __name__ == "__main__":
         for move in moves:
             print(move)
 
+        if len(moves) != 0:
+            visualize_cop_robber_game(board,moves,1)
+
     else:
         cop1_position, cop2_position, robber_position = get_positions_2_cops(board_2_cops)
         print_board(board_2_cops)
         create_smv_file_2_cops(board_2_cops, cop1_position, cop2_position, robber_position)
         output = run_nuxmv_2_cops()
+        moves = parse_nuxmv_output_2_cop(output)
 
-        # Check if the robber escapes
-        if check_if_robber_escapes(output):
-            print("Robber escaped in the first strategy. Now checking the second strategy with circular walls.")
+        print_board(board_2_cops)
+        for move in moves:
+            print(move)
+        
+        if len(moves) != 0:
+            visualize_cop_robber_game(board_2_cops,moves,2)
 
-            # Create the second SMV file with circular walls and run the model
-            create_smv_file_2_cops_circle(board_2_cops, cop1_position, cop2_position, robber_position)
-            output_circle = run_nuxmv_2_cops_circle()
 
-            # Optionally, check if the robber escapes again in the circular strategy
-            if check_if_robber_escapes(output_circle):
-                print("Robber escaped in the second strategy as well.")
-            else:
-                print("Robber was caught in the second strategy.")
-        else:
-            print("Robber was caught in the first strategy.")
+
+
 
 
 
