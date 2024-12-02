@@ -99,7 +99,7 @@ board = [
    ['#', '#', '#', '#', '#']
 ]
 
-# Two cops board example (nuxmv_run.py)
+### Two cops board example (nuxmv_run.py)
 board_2_cops = [
    ['#', '#', '#', '#', '#'],
    ['#', 'C1', 'C2', '_', '#'],
