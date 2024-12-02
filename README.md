@@ -115,7 +115,7 @@ board = [
    '#___#',
    '#___#',
    '#####'
-]
+] ```
 
 ## Running and Results
 
