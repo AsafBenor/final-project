@@ -89,7 +89,7 @@ Configure board variable on line 182:
 - Use `#` for walls
 
 ### Example of valid board configurations:
-```python
+
 # Single cop board example (nuxmv_run.py)
 board = [
    ['#', '#', '#', '#', '#'],
@@ -115,7 +115,7 @@ board = [
    '#___#',
    '#___#',
    '#####'
-] ```
+] 
 
 ## Running and Results
 
