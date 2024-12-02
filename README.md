@@ -77,18 +77,18 @@ Two Cops Board (line 317):
 - Robber: `R`
 - Special Circle Wall: `X`
 
-#### 2. Interactive Simulator (simulator.py)
+### Part 2: Interactive Simulator (simulator.py)
 Configure board variable on line 26:
 - Uses same symbols as NuXMV boards
 - Control robber with WASD keys
 - Cops follow verified strategies
 
-#### 3. Graph Algorithm (checker.py)
+### Part 3: Graph Algorithm (checker.py)
 Configure board variable on line 182:
 - Only wall positions needed
 - Use `#` for walls
 
-Example of valid board configurations:
+### Example of valid board configurations:
 ```python
 # Single cop board example (nuxmv_run.py)
 board = [
