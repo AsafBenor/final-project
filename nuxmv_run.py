@@ -6,7 +6,7 @@ from modelGeneration2 import generate_nusmv_model_1_cop
 from modelGeneration_2_cops import generate_nusmv_model_2_cop
 from output_simulator import visualize_cop_robber_game
 
-NUXMV_PATH = r"C:\Users\97252\Desktop\final-Project\nuXmv-2.0.0-win64\bin"
+NUXMV_PATH = r"nuXmv-2.0.0-win64\bin"
 
 
 def print_board(board):
