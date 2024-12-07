@@ -12,20 +12,31 @@ def generate_and_save_graph(board):
 
     # Save the graph to a pickle file
     with open(PICKLE_FILENAME, 'wb') as f:
-        pickle.dump(graph, f)
-    print(f"Graph saved to {PICKLE_FILENAME}.")
+        pickle.dump({'graph': graph, 'board': board}, f)
+    print(f"Graph and board saved to {PICKLE_FILENAME}.")
 
 
-def load_graph():
+
+def boards_are_equal(board1, board2):
+    return board1 == board2
+
+
+def load_graph(board):
     if os.path.exists(PICKLE_FILENAME):
         print(f"Loading graph from {PICKLE_FILENAME}...")
         with open(PICKLE_FILENAME, 'rb') as f:
-            graph = pickle.load(f)
-        print("Graph loaded successfully.")
+            data = pickle.load(f)
+            graph = data['graph']
+            saved_board = data['board']
+        if boards_are_equal(board, saved_board):
+            print("Graph and board loaded successfully.")
+            return graph
+        else:
+            print("The board has changed since last time. Need to generate a new graph.")
+            return None
     else:
         print(f"No existing graph found. Please generate a new graph.")
         return None
-    return graph
 
 
 def print_board(board, robber_pos, policeman_pos):
@@ -180,17 +191,20 @@ def simulate_game(graph, board, node):
 
 def main():
     board = [
-        "-----",
-        "-----",
-        "-----",
+        "--#--",
+        "--#--",
+        "--#--",
         "-----"
     ]  # Example board, modify as needed
 
-    graph = load_graph()
+    graph = load_graph(board)
 
     if not graph:
+        if os.path.exists(PICKLE_FILENAME):
+            print("Board has changed. Deleting existing graph data.")
+            os.remove(PICKLE_FILENAME)
         generate_and_save_graph(board)
-        graph = load_graph()
+        graph = load_graph(board)
 
     # Find all winning states
     winning_states, winning_state_parents = graph.find_winning_states()
