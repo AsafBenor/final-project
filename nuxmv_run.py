@@ -1,6 +1,7 @@
 import os
 import subprocess
 import re
+import time
 
 from modelGeneration2 import generate_nusmv_model_1_cop
 from modelGeneration_2_cops import generate_nusmv_model_2_cop
@@ -330,7 +331,9 @@ if __name__ == "__main__":
         cop_position, robber_position = get_positions_1_cop(board)
         print_board(board)
         create_smv_file_1_cop(board, cop_position, robber_position)
+        lastTime = time.time()
         output = run_nuxmv_1_cop()
+        print(f"The time taht it was taken: {time.time() - lastTime} seconds")
         moves = parse_nuxmv_output_1_cop(output)
 
         print_board(board)
@@ -344,7 +347,9 @@ if __name__ == "__main__":
         cop1_position, cop2_position, robber_position = get_positions_2_cops(board_2_cops)
         print_board(board_2_cops)
         create_smv_file_2_cops(board_2_cops, cop1_position, cop2_position, robber_position)
+        lastTime = time.time()
         output = run_nuxmv_2_cops()
+        print(f"The time taht it was taken: {time.time() - lastTime} seconds")
         moves = parse_nuxmv_output_2_cop(output)
 
         print_board(board_2_cops)
