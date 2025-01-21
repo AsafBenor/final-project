@@ -1,6 +1,6 @@
 
 MODULE main
-DEFINE rows:=5; columns:=6;
+DEFINE rows:=6; columns:=6;
 -- new   XSB    definition
 -- C      C       Cop
 -- R      R       Robber
@@ -8,21 +8,21 @@ DEFINE rows:=5; columns:=6;
 -- #      #       Wall
 
 VAR
-    cop1_row : 0..4;
+    cop1_row : 0..5;
     cop1_col : 0..5;
-    cop2_row : 0..4;
+    cop2_row : 0..5;
     cop2_col : 0..5;
-    robber_row : 0..4;
+    robber_row : 0..5;
     robber_col : 0..5;
     movement_cop1 : {u, d, l, r, 0};
     movement_cop2 : {u, d, l, r, 0};
     movement_robber : {u, d, l, r, 0};
     robber_turn : boolean;
-    tmp_robber_row : 0..4;
+    tmp_robber_row : 0..5;
     tmp_robber_col : 0..5;
-    tmp_cop1_row : 0..4;
+    tmp_cop1_row : 0..5;
     tmp_cop1_col : 0..5;
-    tmp_cop2_row : 0..4;
+    tmp_cop2_row : 0..5;
     tmp_cop2_col : 0..5;
 
 ASSIGN
@@ -32,17 +32,17 @@ ASSIGN
     init(movement_cop2) := 0;
     init(movement_robber) := 0;
     init(cop1_row) := 1;
-    init(cop1_col) := 2;
+    init(cop1_col) := 1;
     init(cop2_row) := 1;
-    init(cop2_col) := 3;
-    init(robber_row) := 2;
+    init(cop2_col) := 2;
+    init(robber_row) := 1;
     init(robber_col) := 4;
 
     
 tmp_cop1_row :=
     case
         movement_cop1 = u & cop1_row > 0 & !walls[cop1_row - 1][cop1_col]: cop1_row - 1;
-        movement_cop1 = d & cop1_row < 4 & !walls[cop1_row + 1][cop1_col]: cop1_row + 1;
+        movement_cop1 = d & cop1_row < 5 & !walls[cop1_row + 1][cop1_col]: cop1_row + 1;
         TRUE: cop1_row;
     esac;
 
@@ -56,7 +56,7 @@ tmp_cop1_col :=
 tmp_cop2_row :=
     case
         movement_cop2 = u & cop2_row > 0 & !walls[cop2_row - 1][cop2_col]: cop2_row - 1;
-        movement_cop2 = d & cop2_row < 4 & !walls[cop2_row + 1][cop2_col]: cop2_row + 1;
+        movement_cop2 = d & cop2_row < 5 & !walls[cop2_row + 1][cop2_col]: cop2_row + 1;
         TRUE: cop2_row;
     esac;
 
@@ -70,7 +70,7 @@ tmp_cop2_col :=
 tmp_robber_row :=
     case
         movement_robber = u & robber_row > 0 & !walls[robber_row - 1][robber_col]: robber_row - 1;
-        movement_robber = d & robber_row < 4 & !walls[robber_row + 1][robber_col]: robber_row + 1;
+        movement_robber = d & robber_row < 5 & !walls[robber_row + 1][robber_col]: robber_row + 1;
         TRUE: robber_row;
     esac;
 
@@ -152,102 +152,102 @@ next(movement_cop2):=
 next(movement_robber):= 
     case
         robber_turn : 0;  -- No movement if it's not the robber's turn
-    
+
         -- Exclusive single direction movements
         !robber_turn & 
         (robber_row > 0) & !walls[robber_row - 1][robber_col] & 
-        !(robber_row < 4 & !walls[robber_row + 1][robber_col]) & 
+        !(robber_row < 5 & !walls[robber_row + 1][robber_col]) & 
         !(robber_col > 0 & !walls[robber_row][robber_col - 1]) & 
         !(robber_col < 5 & !walls[robber_row][robber_col + 1]) : u;
-    
+
         !robber_turn & 
-        (robber_row < 4) & !walls[robber_row + 1][robber_col] & 
+        (robber_row < 5) & !walls[robber_row + 1][robber_col] & 
         !(robber_row > 0 & !walls[robber_row - 1][robber_col]) & 
         !(robber_col > 0 & !walls[robber_row][robber_col - 1]) & 
         !(robber_col < 5 & !walls[robber_row][robber_col + 1]) : d;
-    
+
         !robber_turn & 
         (robber_col > 0) & !walls[robber_row][robber_col - 1] & 
         !(robber_row > 0 & !walls[robber_row - 1][robber_col]) & 
-        !(robber_row < 4 & !walls[robber_row + 1][robber_col]) & 
+        !(robber_row < 5 & !walls[robber_row + 1][robber_col]) & 
         !(robber_col < 5 & !walls[robber_row][robber_col + 1]) : l;
-    
+
         !robber_turn & 
         (robber_col < 5) & !walls[robber_row][robber_col + 1] & 
         !(robber_row > 0 & !walls[robber_row - 1][robber_col]) & 
-        !(robber_row < 4 & !walls[robber_row + 1][robber_col]) & 
+        !(robber_row < 5 & !walls[robber_row + 1][robber_col]) & 
         !(robber_col > 0 & !walls[robber_row][robber_col - 1]) : r;
-    
+
         -- Double direction movements
         !robber_turn & 
         (robber_row > 0) & !walls[robber_row - 1][robber_col] & 
-        (robber_row < 4) & !walls[robber_row + 1][robber_col] & 
+        (robber_row < 5) & !walls[robber_row + 1][robber_col] & 
         !(robber_col > 0 & !walls[robber_row][robber_col - 1]) & 
         !(robber_col < 5 & !walls[robber_row][robber_col + 1]) : {u, d};
-    
+
         !robber_turn & 
         (robber_col > 0) & !walls[robber_row][robber_col - 1] & 
         (robber_col < 5) & !walls[robber_row][robber_col + 1] & 
         !(robber_row > 0 & !walls[robber_row - 1][robber_col]) & 
-        !(robber_row < 4 & !walls[robber_row + 1][robber_col]) : {l, r};
-    
+        !(robber_row < 5 & !walls[robber_row + 1][robber_col]) : {l, r};
+
         !robber_turn & 
         (robber_row > 0) & !walls[robber_row - 1][robber_col] & 
         (robber_col > 0) & !walls[robber_row][robber_col - 1] &
         !(robber_row < {rows - 1} & !walls[robber_row + 1][robber_col]) &
         !(robber_col < {columns - 1} & !walls[robber_row][robber_col + 1]) : {u, l};
-    
+
         !robber_turn & 
         (robber_row < {rows - 1}) & !walls[robber_row + 1][robber_col] & 
         (robber_col < {columns - 1}) & !walls[robber_row][robber_col + 1] &
         !(robber_row > 0 & !walls[robber_row - 1][robber_col]) &
         !(robber_col > 0 & !walls[robber_row][robber_col - 1]) : {d, r};
-    
+
         !robber_turn & 
         (robber_row > 0) & !walls[robber_row - 1][robber_col] & 
         (robber_col < {columns - 1}) & !walls[robber_row][robber_col + 1] &
         !(robber_row < {rows - 1} & !walls[robber_row + 1][robber_col]) &
         !(robber_col > 0 & !walls[robber_row][robber_col - 1]) : {u, r};
-    
+
         !robber_turn & 
         (robber_row < {rows - 1}) & !walls[robber_row + 1][robber_col] & 
         (robber_col > 0) & !walls[robber_row][robber_col - 1] &
         !(robber_row > 0 & !walls[robber_row - 1][robber_col]) &
         !(robber_col < {columns - 1} & !walls[robber_row][robber_col + 1]) : {d, l};
-    
+
         -- Three direction movements
         !robber_turn & 
         (robber_row > 0) & !walls[robber_row - 1][robber_col] & 
         (robber_row < {rows - 1}) & !walls[robber_row + 1][robber_col] & 
         (robber_col > 0) & !walls[robber_row][robber_col - 1] &
         !(robber_col < {columns - 1} & !walls[robber_row][robber_col + 1]) : {u, d, l};
-    
+
         !robber_turn & 
         (robber_row > 0) & !walls[robber_row - 1][robber_col] & 
         (robber_row < {rows - 1}) & !walls[robber_row + 1][robber_col] & 
         (robber_col < {columns - 1}) & !walls[robber_row][robber_col + 1] &
         !(robber_col > 0 & !walls[robber_row][robber_col - 1]) : {u, d, r};
-    
+
         !robber_turn & 
         (robber_row > 0) & !walls[robber_row - 1][robber_col] & 
         (robber_col > 0) & !walls[robber_row][robber_col - 1] & 
         (robber_col < {columns - 1}) & !walls[robber_row][robber_col + 1] &
         !(robber_row < {rows - 1} & !walls[robber_row + 1][robber_col]) : {u, l, r};
-    
+
         !robber_turn & 
         (robber_row < {rows - 1}) & !walls[robber_row + 1][robber_col] & 
         (robber_col > 0) & !walls[robber_row][robber_col - 1] & 
         (robber_col < {columns - 1}) & !walls[robber_row][robber_col + 1] &
         !(robber_row > 0 & !walls[robber_row - 1][robber_col]) : {d, l, r};
-    
-    
+
+
         -- All directions possible
         !robber_turn & 
         (robber_row > 0) & !walls[robber_row - 1][robber_col] & 
-        (robber_row < 4) & !walls[robber_row + 1][robber_col] & 
+        (robber_row < 5) & !walls[robber_row + 1][robber_col] & 
         (robber_col > 0) & !walls[robber_row][robber_col - 1] & 
         (robber_col < 5) & !walls[robber_row][robber_col + 1] : {u, d, l, r};
-    
+
         TRUE : 0;  -- Default to no movement if no valid conditions are met
     esac;
 
@@ -266,20 +266,20 @@ DEFINE
     next_manhattan_distance_cop2_if_right := abs(cop2_row - tmp_robber_row) + abs((cop2_col + 1) - tmp_robber_col);
 
     near_circle_wall := 
-        ((cop1_row < 4 & cop1_col < 5 & circle_walls[cop1_row + 1][cop1_col + 1]) | 
-        (cop1_row < 4 & cop1_col > 0 & circle_walls[cop1_row + 1][cop1_col - 1]) |
+        ((cop1_row < 5 & cop1_col < 5 & circle_walls[cop1_row + 1][cop1_col + 1]) | 
+        (cop1_row < 5 & cop1_col > 0 & circle_walls[cop1_row + 1][cop1_col - 1]) |
         (cop1_row > 0 & cop1_col > 0 & circle_walls[cop1_row - 1][cop1_col - 1]) |
         (cop1_row > 0 & cop1_col < 5 & circle_walls[cop1_row - 1][cop1_col + 1]) |
         (cop1_row > 0 & circle_walls[cop1_row - 1][cop1_col]) | 
-        (cop1_row < 4 & circle_walls[cop1_row + 1][cop1_col]) | 
+        (cop1_row < 5 & circle_walls[cop1_row + 1][cop1_col]) | 
         (cop1_col > 0 & circle_walls[cop1_row][cop1_col - 1]) | 
         (cop1_col < 5 & circle_walls[cop1_row][cop1_col + 1])) &
-        ((cop2_row < 4 & cop2_col < 5 & circle_walls[cop2_row + 1][cop2_col + 1]) | 
-        (cop2_row < 4 & cop2_col > 0 & circle_walls[cop2_row + 1][cop2_col - 1]) | 
+        ((cop2_row < 5 & cop2_col < 5 & circle_walls[cop2_row + 1][cop2_col + 1]) | 
+        (cop2_row < 5 & cop2_col > 0 & circle_walls[cop2_row + 1][cop2_col - 1]) | 
         (cop2_row > 0 & cop2_col < 5 & circle_walls[cop2_row - 1][cop2_col + 1]) | 
         (cop2_row > 0 & cop2_col > 0 & circle_walls[cop2_row - 1][cop2_col - 1]) | 
         (cop2_row > 0 & circle_walls[cop2_row - 1][cop2_col]) | 
-        (cop2_row < 4 & circle_walls[cop2_row + 1][cop2_col]) | 
+        (cop2_row < 5 & circle_walls[cop2_row + 1][cop2_col]) | 
         (cop2_col > 0 & circle_walls[cop2_row][cop2_col - 1]) | 
         (cop2_col < 5 & circle_walls[cop2_row][cop2_col + 1]));
 
@@ -287,10 +287,10 @@ DEFINE
     robber_touches_circle :=
         (robber_row > 0 & robber_col > 0 & circle_walls[robber_row - 1][robber_col - 1]) |  -- Top-left
         (robber_row > 0 & robber_col < 5 & circle_walls[robber_row - 1][robber_col + 1]) |  -- Top-right
-        (robber_row < 4 & robber_col > 0 & circle_walls[robber_row + 1][robber_col - 1]) |  -- Bottom-left
-        (robber_row < 4 & robber_col < 5 & circle_walls[robber_row + 1][robber_col + 1]) |  -- Bottom-right
+        (robber_row < 5 & robber_col > 0 & circle_walls[robber_row + 1][robber_col - 1]) |  -- Bottom-left
+        (robber_row < 5 & robber_col < 5 & circle_walls[robber_row + 1][robber_col + 1]) |  -- Bottom-right
         (robber_row > 0 & circle_walls[robber_row - 1][robber_col]) |  -- Top
-        (robber_row < 4 & circle_walls[robber_row + 1][robber_col]) |  -- Bottom
+        (robber_row < 5 & circle_walls[robber_row + 1][robber_col]) |  -- Bottom
         (robber_col > 0 & circle_walls[robber_row][robber_col - 1]) |  -- Left
         (robber_col < 5 & circle_walls[robber_row][robber_col + 1]);  -- Right
 
@@ -298,12 +298,14 @@ DEFINE
 [ TRUE,  TRUE,  TRUE,  TRUE,  TRUE,  TRUE],
 [ TRUE, FALSE, FALSE, FALSE, FALSE,  TRUE],
 [ TRUE, FALSE,  TRUE,  TRUE, FALSE,  TRUE],
+[ TRUE, FALSE,  TRUE,  TRUE, FALSE,  TRUE],
 [ TRUE, FALSE, FALSE, FALSE, FALSE,  TRUE],
 [ TRUE,  TRUE,  TRUE,  TRUE,  TRUE,  TRUE]];
     circle_walls := [
 [FALSE, FALSE, FALSE, FALSE, FALSE, FALSE],
 [FALSE, FALSE, FALSE, FALSE, FALSE, FALSE],
-[FALSE, FALSE, FALSE, FALSE, FALSE, FALSE],
+[FALSE, FALSE,  TRUE,  TRUE, FALSE, FALSE],
+[FALSE, FALSE,  TRUE,  TRUE, FALSE, FALSE],
 [FALSE, FALSE, FALSE, FALSE, FALSE, FALSE],
 [FALSE, FALSE, FALSE, FALSE, FALSE, FALSE]];
 DEFINE

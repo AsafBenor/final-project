@@ -26,8 +26,8 @@ ASSIGN
     init(movement_cop) := 0;
     init(movement_robber) := 0;
     init(cop_row) := 2;
-    init(cop_col) := 3;
-    init(robber_row) := 2;
+    init(cop_col) := 2;
+    init(robber_row) := 1;
     init(robber_col) := 1;
 
     
@@ -201,7 +201,7 @@ DEFINE
 walls := [
 [ TRUE,  TRUE,  TRUE,  TRUE,  TRUE],
 [ TRUE, FALSE, FALSE, FALSE,  TRUE],
-[ TRUE, FALSE,  TRUE, FALSE,  TRUE],
+[ TRUE, FALSE, FALSE, FALSE,  TRUE],
 [ TRUE, FALSE, FALSE, FALSE,  TRUE],
 [ TRUE,  TRUE,  TRUE,  TRUE,  TRUE]];
 DEFINE
